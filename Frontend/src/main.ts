@@ -13,4 +13,4 @@ bootstrapApplication(AppComponent, {
     provideRouter(routes),
     provideHttpClient(withInterceptors([tokenInterceptor, errorInterceptor]))
   ]
-}).catch(err => console.error(err));
+}).catch((err: Error) => console.error(err));

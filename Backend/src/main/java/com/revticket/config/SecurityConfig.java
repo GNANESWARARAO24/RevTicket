@@ -15,6 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.header.writers.CrossOriginOpenerPolicyHeaderWriter;
+import org.springframework.security.web.header.writers.CrossOriginEmbedderPolicyHeaderWriter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -37,6 +39,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .headers(headers -> headers
+                .crossOriginOpenerPolicy(coop -> coop.policy(CrossOriginOpenerPolicyHeaderWriter.CrossOriginOpenerPolicy.SAME_ORIGIN_ALLOW_POPUPS))
+                .crossOriginEmbedderPolicy(coep -> coep.policy(CrossOriginEmbedderPolicyHeaderWriter.CrossOriginEmbedderPolicy.UNSAFE_NONE))
+            )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/actuator/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
@@ -46,11 +52,11 @@ public class SecurityConfig {
                 .requestMatchers("/api/theaters").permitAll()
                 .requestMatchers("/api/showtimes/**").permitAll()
                 .requestMatchers("/api/screens/**").permitAll()
-                .requestMatchers("/api/admin/movies").permitAll()  // Temporary: for testing
-                .requestMatchers("/api/admin/theatres").permitAll()  // Temporary: for testing
-                .requestMatchers("/api/admin/theatres/**").permitAll()  // Temporary: for testing
-                .requestMatchers("/api/admin/screens").permitAll()  // Temporary: for testing
-                .requestMatchers("/api/admin/screens/**").permitAll()  // Temporary: for testing
+                .requestMatchers("/api/admin/movies").permitAll()  
+                .requestMatchers("/api/admin/theatres").permitAll()  
+                .requestMatchers("/api/admin/theatres/**").permitAll()  
+                .requestMatchers("/api/admin/screens").permitAll()  
+                .requestMatchers("/api/admin/screens/**").permitAll()  
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )

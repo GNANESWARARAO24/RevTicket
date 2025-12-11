@@ -68,7 +68,9 @@ services:
       - revticket-network
 
   frontend:
-    image: harshwarbhe/revticket-frontend:latest
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
     container_name: revticket-frontend
     restart: unless-stopped
     ports:
